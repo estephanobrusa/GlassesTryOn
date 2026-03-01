@@ -1,0 +1,6 @@
+# Core package .gitignore
+node_modules/
+dist/
+.env
+*.log
+.DS_Store

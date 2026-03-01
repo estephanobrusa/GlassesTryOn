@@ -1,0 +1,38 @@
+{
+  "name": "glasses-tryon-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "packages/core",
+    "packages/react",
+    "packages/demo"
+  ],
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.1"
+  },
+  "scripts": {
+    "lint": "eslint 'packages/**/*.{ts,tsx,js,jsx}' --max-warnings=0",
+    "lint:fix": "eslint 'packages/**/*.{ts,tsx,js,jsx}' --fix",
+    "format": "prettier --write 'packages/**/*.{ts,tsx,js,jsx,json,css,md}'",
+    "build:core": "pnpm --filter glasses-tryon-core run build",
+    "build:react": "pnpm --filter glasses-tryon-react run build",
+    "build:all": "pnpm run build:core && pnpm run build:react",
+    "dev:demo": "pnpm --filter demo run dev"
+  },
+  "dependencies": {
+    "@mediapipe/face_mesh": "^0.4.1633559619",
+    "@tensorflow-models/face-landmarks-detection": "^1.0.6",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.22.0",
+    "@tensorflow/tfjs-converter": "^4.22.0",
+    "@tensorflow/tfjs-core": "^4.22.0",
+    "@types/three": "^0.183.1",
+    "glasses-tryon-react": "link:packages/react",
+    "three": "^0.157.0"
+  }
+}
