@@ -11,7 +11,8 @@ export default function App() {
         smoothingFactor={0.8}
         maxFPS={30}
         onFaceDetected={() => console.log('Cara detectada')}
-        modelConfig={{ scale: 1, offset: { z: 5 } }}
+        modelConfig={{ scale: 1, offset: { z: 10 } }}
+        alignmentConfig={{ glassesScaleFactor: 0.35, glassesZ: -10 }}
       />
     </div>
   );

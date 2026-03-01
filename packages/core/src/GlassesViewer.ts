@@ -12,6 +12,7 @@ export interface GlassesViewerOptions {
   tracking?: { smoothingFactor?: number };
   render?: { maxFPS?: number; pixelRatio?: number };
   debug?: boolean;
+  alignmentConfig?: { glassesScaleFactor?: number; glassesZ?: number };
 }
 
 export class GlassesViewer {
@@ -56,6 +57,13 @@ export class GlassesViewer {
 
     // 3. Initialize aligner
     this.aligner = new AlignmentEngine(videoElement.videoWidth, videoElement.videoHeight);
+    // Aplica configuración de alineación si está presente
+    if (this.options.alignmentConfig?.glassesScaleFactor !== undefined) {
+      this.aligner.glassesScaleFactor = this.options.alignmentConfig.glassesScaleFactor;
+    }
+    if (this.options.alignmentConfig?.glassesZ !== undefined) {
+      this.aligner.glassesZ = this.options.alignmentConfig.glassesZ;
+    }
     console.log('[GlassesViewer] Aligner inicializado');
 
     // 4. Initialize scene

@@ -21,6 +21,10 @@ export class AlignmentEngine {
   // Ajusta viewHeight según el FOV de tu cámara (45° y z=50 → ~41 unidades)
   private readonly VIEW_HEIGHT = 41;
 
+  // Parámetros configurables para diagnóstico visual
+  public glassesZ: number = 0; // Ajusta la posición Z de los glasses
+  public glassesScaleFactor: number = 1; // Multiplica la escala calculada
+
   constructor(videoWidth = 640, videoHeight = 480) {
     this.videoWidth = videoWidth;
     this.videoHeight = videoHeight;
@@ -69,14 +73,21 @@ export class AlignmentEngine {
     const position = {
       x: (eyeMidPx.x / this.videoWidth - 0.5) * viewWidth,
       y: -(eyeMidPx.y / this.videoHeight - 0.5) * this.VIEW_HEIGHT,
-      z: 0, // la profundidad real del modelo la controla tu escena
+      z: this.glassesZ, // la profundidad real del modelo la controla tu escena
     };
 
     // 2. ESCALA — distancia interpupilar normalizada
     // IPD en píxeles
     const ipdPx = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y);
-    // Normaliza a coordenadas de escena
-    const scale = (ipdPx / this.videoWidth) * viewWidth;
+    // Normaliza a coordenadas de escena y aplica factor
+    const scale = (ipdPx / this.videoWidth) * viewWidth * this.glassesScaleFactor;
+
+    // Diagnóstico visual: mostrar valores en consola
+    if (typeof window !== 'undefined') {
+      console.log('[AlignmentEngine] Posición glasses:', position);
+      console.log('[AlignmentEngine] Escala glasses:', scale);
+      console.log('[AlignmentEngine] IPD px:', ipdPx);
+    }
 
     // 3. ROTACIÓN — usando vectores del plano facial
 

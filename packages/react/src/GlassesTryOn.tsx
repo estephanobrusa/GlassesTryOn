@@ -11,6 +11,10 @@ interface GlassesTryOnProps {
     scale?: number;
     offset?: { x?: number; y?: number; z?: number };
   };
+  alignmentConfig?: {
+    glassesScaleFactor?: number;
+    glassesZ?: number;
+  };
 }
 
 export const GlassesTryOn: React.FC<GlassesTryOnProps> = ({
@@ -19,6 +23,7 @@ export const GlassesTryOn: React.FC<GlassesTryOnProps> = ({
   maxFPS,
   onFaceDetected,
   modelConfig,
+  alignmentConfig,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewerRef = useRef<GlassesViewer | null>(null);
@@ -30,6 +35,7 @@ export const GlassesTryOn: React.FC<GlassesTryOnProps> = ({
         model: { url: model, ...(modelConfig || {}) },
         tracking: { smoothingFactor },
         render: { maxFPS },
+        alignmentConfig,
       });
       viewerRef.current.on('faceDetected', onFaceDetected || (() => {}));
       viewerRef.current.start();
