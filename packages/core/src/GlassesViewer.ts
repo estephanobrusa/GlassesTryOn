@@ -1,10 +1,13 @@
 // GlassesViewer.ts
-// Versión inicial, solo interfaz y estructura
+// Main orchestrator for the AR glasses try-on pipeline.
+// Integrates camera, calibration, face mesh, geometry estimation, pose application, and Three.js scene management.
 
 import { CameraEngine } from './CameraEngine';
-import { FaceTracker } from './FaceTracker';
-import { AlignmentEngine } from './AlignmentEngine';
-import { SceneManager } from './SceneManager';
+import { CameraCalibration } from './CameraCalibration';
+import { FaceMeshRunner } from './FaceMeshRunner';
+import { FaceGeometryEstimator, AlignmentConfig } from './FaceGeometryEstimator';
+import { PoseApplier } from './PoseApplier';
+import { ThreeSceneManager } from './ThreeSceneManager';
 
 export interface GlassesViewerOptions {
   container: HTMLElement;
@@ -12,25 +15,33 @@ export interface GlassesViewerOptions {
   tracking?: { smoothingFactor?: number };
   render?: { maxFPS?: number; pixelRatio?: number };
   debug?: boolean;
-  alignmentConfig?: { glassesScaleFactor?: number; glassesZ?: number };
+  alignmentConfig?: AlignmentConfig;
 }
 
 export class GlassesViewer {
   private camera?: CameraEngine;
-  private tracker?: FaceTracker;
-  private aligner?: AlignmentEngine;
-  private scene?: SceneManager;
-  private listeners: Record<string, Function[]> = {};
+  private calibration?: CameraCalibration;
+  private faceMeshRunner?: FaceMeshRunner;
+  private geometryEstimator?: FaceGeometryEstimator;
+  private sceneManager?: ThreeSceneManager;
+  private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
+  private _lastFaceState = false;
+  private _running = false;
+  private _rafId: number | null = null;
+  private _maxFPS: number;
+  private _lastFrameTime = 0;
 
-  constructor(public options: GlassesViewerOptions) {}
+  constructor(public options: GlassesViewerOptions) {
+    this._maxFPS = options.render?.maxFPS ?? 0; // 0 = unlimited
+  }
 
   async start(): Promise<void> {
     // 1. Initialize camera
     this.camera = new CameraEngine(this.options.container);
     await this.camera.start();
-    console.log('[GlassesViewer] Cámara inicializada');
+    console.log('[GlassesViewer] Camera initialized');
 
-    // Espera a que el video esté listo
+    // Wait for video to be ready
     const videoElement = this.camera.getVideoElement();
     await new Promise<void>((resolve) => {
       if (
@@ -50,68 +61,140 @@ export class GlassesViewer {
       }
     });
 
-    // 2. Initialize tracker
-    this.tracker = new FaceTracker(videoElement);
-    await this.tracker.start();
-    console.log('[GlassesViewer] Tracker inicializado');
+    // 2. Camera calibration
+    this.calibration = new CameraCalibration(videoElement.videoWidth, videoElement.videoHeight);
+    console.log('[GlassesViewer] Camera calibration:', this.calibration.getIntrinsics());
 
-    // 3. Initialize aligner
-    this.aligner = new AlignmentEngine(videoElement.videoWidth, videoElement.videoHeight);
-    // Aplica configuración de alineación si está presente
-    if (this.options.alignmentConfig?.glassesScaleFactor !== undefined) {
-      this.aligner.glassesScaleFactor = this.options.alignmentConfig.glassesScaleFactor;
-    }
-    if (this.options.alignmentConfig?.glassesZ !== undefined) {
-      this.aligner.glassesZ = this.options.alignmentConfig.glassesZ;
-    }
-    console.log('[GlassesViewer] Aligner inicializado');
+    // 3. FaceMeshRunner
+    this.faceMeshRunner = new FaceMeshRunner(videoElement);
+    await this.faceMeshRunner.start();
+    console.log('[GlassesViewer] FaceMeshRunner started');
 
-    // 4. Initialize scene
-    this.scene = new SceneManager(this.options.container);
+    // 4. FaceGeometryEstimator — pass alignment config through
+    this.geometryEstimator = new FaceGeometryEstimator(
+      this.calibration.getIntrinsics(),
+      videoElement.videoWidth,
+      videoElement.videoHeight,
+      this.options.alignmentConfig,
+    );
+
+    // 5. Three.js scene manager (OrthographicCamera, lighting included)
+    this.sceneManager = new ThreeSceneManager(this.options.container);
+    this.sceneManager.videoWidth = videoElement.videoWidth;
+    this.sceneManager.videoHeight = videoElement.videoHeight;
+    // Align the orthographic frustum & drawing buffer with the actual video resolution
+    this.sceneManager.updateForVideo(videoElement.videoWidth, videoElement.videoHeight);
+
+    // Apply custom pixel ratio if provided
+    if (this.options.render?.pixelRatio) {
+      this.sceneManager.renderer.setPixelRatio(
+        Math.min(this.options.render.pixelRatio, window.devicePixelRatio),
+      );
+    }
+
+    // 6. Load GLB model — await before starting loop
     if (this.options.model) {
-      console.log('[GlassesViewer] Cargando modelo:', this.options.model.url);
-      await this.scene.setModel(this.options.model.url, this.options.model);
-      console.log('[GlassesViewer] Modelo cargado');
-      this.emit('modelLoaded');
+      await this.loadModel(this.options.model.url);
     } else {
-      console.warn('[GlassesViewer] No se especificó modelo');
+      console.warn('[GlassesViewer] No model specified');
     }
 
-    // 5. Render loop
-    if (this.scene) this.scene.start();
-    this.loop();
+    // 7. Start render loop
+    this._running = true;
+    this._lastFrameTime = 0;
+    this.loop(0);
   }
 
-  private loop = () => {
-    const landmarks = this.tracker?.getLandmarks();
-    if (landmarks) {
-      const transform = this.aligner?.computeTransform(landmarks);
-      if (transform) {
-        this.scene?.applyTransform(transform);
-        // Depuración de transform
-        console.log('[GlassesViewer] Transform aplicado:', transform);
-      } else {
-        console.warn('[GlassesViewer] No se pudo calcular transform');
+  private loadModel(url: string): Promise<void> {
+    return new Promise(async (resolve, reject) => {
+      const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader');
+      const loader = new GLTFLoader();
+      loader.load(
+        url,
+        (gltf) => {
+          this.sceneManager?.setModel(gltf.scene);
+          console.log('[GlassesViewer] Model loaded, native width:', this.sceneManager?.modelWidth);
+          this.emit('modelLoaded');
+          resolve();
+        },
+        undefined,
+        (error) => {
+          console.error('[GlassesViewer] Error loading model:', error);
+          reject(error);
+        },
+      );
+    });
+  }
+
+  private loop = (time: number) => {
+    if (!this._running) return;
+
+    // FPS throttling
+    if (this._maxFPS > 0) {
+      const minInterval = 1000 / this._maxFPS;
+      if (time - this._lastFrameTime < minInterval) {
+        this._rafId = requestAnimationFrame(this.loop);
+        return;
       }
-      this.emit('faceDetected');
-    } else {
-      console.warn('[GlassesViewer] No se detectaron landmarks');
+      this._lastFrameTime = time;
     }
-    requestAnimationFrame(this.loop);
+
+    const face = this.faceMeshRunner?.getLastFace();
+    if (face && this.sceneManager?.model) {
+      if (!this._lastFaceState) {
+        console.log('[GlassesViewer] Face detected');
+        this._lastFaceState = true;
+      }
+
+      const pose = this.geometryEstimator?.estimatePose(face);
+      if (pose) {
+        if (this.options.debug) {
+          console.log('[GlassesViewer] pose:', {
+            posX: pose.position.x.toFixed(3),
+            posY: pose.position.y.toFixed(3),
+            posZ: pose.position.z.toFixed(3),
+            scale: pose.scale.toFixed(4),
+          });
+        }
+        PoseApplier.applyPose(this.sceneManager.model, pose);
+        this.sceneManager.model.visible = true;
+        this.emit('faceDetected');
+      }
+    } else {
+      if (this._lastFaceState) {
+        console.log('[GlassesViewer] Face lost');
+        this._lastFaceState = false;
+        this.emit('faceLost');
+      }
+      if (this.sceneManager?.model) {
+        this.sceneManager.model.visible = false;
+      }
+    }
+
+    this.sceneManager?.render();
+    this._rafId = requestAnimationFrame(this.loop);
   };
 
   destroy(): void {
+    this._running = false;
+    if (this._rafId !== null) {
+      cancelAnimationFrame(this._rafId);
+      this._rafId = null;
+    }
     this.camera?.destroy();
-    this.tracker?.destroy();
-    this.scene?.destroy();
+    this.faceMeshRunner?.stop();
+    this.sceneManager?.destroy();
+    this.calibration = undefined;
+    this.geometryEstimator = undefined;
+    this.listeners = {};
   }
 
-  on(event: string, cb: Function) {
+  on(event: string, cb: (...args: unknown[]) => void) {
     this.listeners[event] = this.listeners[event] || [];
     this.listeners[event].push(cb);
   }
 
-  off(event: string, cb: Function) {
+  off(event: string, cb: (...args: unknown[]) => void) {
     this.listeners[event] = (this.listeners[event] || []).filter((f) => f !== cb);
   }
 

@@ -1,47 +1,115 @@
-# Librería Open Source Try-On 3D de Lentes con Three.js
+# GlassesTryON — Open Source 3D Glasses Virtual Try-On
 
-## Resumen
-Permite probar lentes virtuales en tiempo real usando la cámara web. V1: try-on básico, renderizado de lentes 3D alineados a la cara, Three.js para render, MediaPipe para tracking.
+## Overview
 
-## Estructura
-- `/packages/core`: Motor principal (tracking, render, alignment)
-- `/packages/react`: Wrapper React
-- `/packages/demo`: Demo para testing
+Real-time virtual glasses try-on using webcam, MediaPipe FaceMesh, and Three.js.
+Monorepo with three packages: **core** engine, **react** wrapper, and **demo** app.
 
-## Instalación
-1. Instala dependencias:
-   ```bash
-   npm install
-   ```
-2. Compila los paquetes:
-   ```bash
-   npm run build --workspace=packages/core
-   npm run build --workspace=packages/react
-   ```
-3. Inicia la demo:
-   ```bash
-   npm start --workspace=packages/demo
-   ```
+## Architecture
 
-## Uso básico
-```ts
-const viewer = new GlassesViewer({ container: document.getElementById("app"), model: { url: "/glasses.glb" } });
-await viewer.start();
+```
+CameraEngine → FaceMeshRunner → FaceGeometryEstimator → PoseApplier → ThreeSceneManager
+                                 ↑ CameraCalibration
 ```
 
-## Uso en React
+All orchestrated by `GlassesViewer`.
+
+## Structure
+
+| Package               | Path              | Purpose                                                  |
+| --------------------- | ----------------- | -------------------------------------------------------- |
+| `glasses-tryon-core`  | `/packages/core`  | Engine: camera, face tracking, pose estimation, 3D scene |
+| `glasses-tryon-react` | `/packages/react` | `<GlassesTryOn>` React component                         |
+| `glasses-tryon-demo`  | `/packages/demo`  | Vite demo app for testing                                |
+
+## Prerequisites
+
+- Node.js >= 18
+- pnpm >= 9
+
+## Installation
+
+```bash
+pnpm install
+```
+
+## Build
+
+```bash
+# Build core + react packages
+pnpm run build:all
+
+# Or individually
+pnpm run build:core
+pnpm run build:react
+```
+
+## Development
+
+```bash
+# Start Vite dev server for the demo
+pnpm run dev:demo
+# → opens http://localhost:5173
+```
+
+## Usage — Vanilla JS/TS
+
+```ts
+import { GlassesViewer } from 'glasses-tryon-core';
+
+const viewer = new GlassesViewer({
+  container: document.getElementById('app')!,
+  model: { url: '/models/glasses.glb' },
+  render: { maxFPS: 30 },
+  alignmentConfig: { glassesScaleFactor: 1.0, glassesZ: 10 },
+  debug: false,
+});
+
+viewer.on('faceDetected', () => console.log('Face detected'));
+viewer.on('faceLost', () => console.log('Face lost'));
+viewer.on('modelLoaded', () => console.log('Model ready'));
+
+await viewer.start();
+
+// Cleanup
+viewer.destroy();
+```
+
+## Usage — React
+
 ```tsx
+import { GlassesTryOn } from 'glasses-tryon-react';
+
 <GlassesTryOn
-  model="/models/rayban.glb"
-  smoothingFactor={0.8}
+  model="/models/glasses.glb"
   maxFPS={30}
-  onFaceDetected={() => console.log("Cara detectada")}
-/>
+  onFaceDetected={() => console.log('Face detected')}
+  modelConfig={{ scale: 1.0 }}
+/>;
+```
+
+## VS Code Tasks
+
+| Task                    | Description           |
+| ----------------------- | --------------------- |
+| **Build All** (default) | Build core + react    |
+| **Dev Demo**            | Start Vite dev server |
+| **Lint** / **Lint Fix** | Run ESLint            |
+| **Format**              | Run Prettier          |
+
+## Linting & Formatting
+
+```bash
+pnpm run lint        # Check
+pnpm run lint:fix    # Auto-fix
+pnpm run format      # Prettier
 ```
 
 ## Roadmap
-- Captura de foto
-- Multi-face
-- Postprocessing
-- Export pose
-- Plugins
+
+- Face mesh occluder (hide temple arms behind face)
+- Photo capture
+- Multi-face support
+- Post-processing effects
+- Pose data export
+- Plugin system

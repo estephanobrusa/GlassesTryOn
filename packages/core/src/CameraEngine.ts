@@ -9,13 +9,23 @@ export class CameraEngine {
     this.video = document.createElement('video');
     this.video.autoplay = true;
     this.video.playsInline = true;
+    this.video.muted = true;
+    // Mirror for selfie view
     this.video.style.display = 'block';
+    this.video.style.transform = 'scaleX(-1)';
     this.container.appendChild(this.video);
   }
 
   async start(): Promise<void> {
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      this.stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          aspectRatio: { ideal: 16 / 9 },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
       this.video.srcObject = this.stream;
       await this.video.play();
     } catch (err) {
