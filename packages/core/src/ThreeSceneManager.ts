@@ -54,8 +54,8 @@ export class ThreeSceneManager {
       video.style.width = '100%';
       video.style.height = '100%';
       video.style.zIndex = '1';
-      // Use same stretch behavior as the canvas so both align pixel-for-pixel
-      video.style.objectFit = 'fill';
+      // cover: preserve camera aspect ratio, crop edges rather than distort face
+      video.style.objectFit = 'cover';
     }
 
     this.renderer.domElement.style.position = 'absolute';
