@@ -1,1 +1,1 @@
-export { GlassesTryOn } from "./src/GlassesTryOn";
+export { GlassesTryOn } from './src/GlassesTryOn';

@@ -1,0 +1,82 @@
+name: Release
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ENVIRONMENTS
+#
+#  develop ──► CI only (lint, typecheck, test, build) — NO npm publish
+#              Work branch for daily development and PRs
+#
+#  main    ──► CI + Release automation (release-please + npm publish @latest)
+#              Only receives merges from develop via PR
+#              Every merge triggers release-please which:
+#                1. Opens/updates a Release PR (CHANGELOG + version bump)
+#                2. On merge of that Release PR → creates git tag + publishes to npm
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  # ── JOB 1: release-please ────────────────────────────────────────────────
+  # Reads conventional commits since last release and opens a Release PR.
+  # When that PR is merged → creates git tag and sets releases_created=true.
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      releases_created: ${{ steps.release.outputs.releases_created }}
+      core_release_created: ${{ steps.release.outputs['packages/core--release_created'] }}
+      react_release_created: ${{ steps.release.outputs['packages/react--release_created'] }}
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── JOB 2: publish ───────────────────────────────────────────────────────
+  # Runs ONLY when release-please merged a Release PR and created a git tag.
+  # Publishes glasses-tryon-core and/or glasses-tryon-react to npm @latest.
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.releases_created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm run build:all
+
+      # Publishes glasses-tryon-core only if its version was bumped
+      - name: Publish core to npm
+        if: needs.release-please.outputs.core_release_created == 'true'
+        run: pnpm --filter glasses-tryon-core publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Publishes glasses-tryon-react only if its version was bumped
+      - name: Publish react to npm
+        if: needs.release-please.outputs.react_release_created == 'true'
+        run: pnpm --filter glasses-tryon-react publish --no-git-checks --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

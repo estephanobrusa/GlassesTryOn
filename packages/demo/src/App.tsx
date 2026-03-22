@@ -25,7 +25,7 @@ export default function App() {
         <GlassesTryOn
           model="/models/test.glb"
           maxFPS={30}
-          onFaceDetected={() => console.log('Cara detectada')}
+          onFaceDetected={() => console.log('face detected')}
           modelConfig={{ scale: 30 }}
         />
       </div>

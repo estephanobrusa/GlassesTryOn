@@ -10,17 +10,50 @@
       "require": "./dist/index.js"
     }
   },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estephanobrusa/GlassesTryOn.git",
+    "directory": "packages/react"
+  },
+  "keywords": [
+    "face mesh",
+    "react",
+    "try-on",
+    "ar",
+    "threejs"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "glasses-tryon-core": "workspace:*",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "glasses-tryon-core": "workspace:*"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "tsup": "^7.0.0",
     "typescript": "^5.0.0"
   }

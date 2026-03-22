@@ -1,0 +1,5 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/manifest.json",
+  "packages/core": "1.0.0",
+  "packages/react": "1.0.0"
+}

@@ -9,9 +9,22 @@ export interface FaceLandmark {
   z: number;
 }
 
+/** Minimal interface for the MediaPipe FaceMesh instance. */
+interface FaceMeshResults {
+  multiFaceLandmarks?: FaceLandmark[][];
+}
+
+interface FaceMeshInstance {
+  setOptions(opts: Record<string, unknown>): void;
+  onResults(cb: (results: FaceMeshResults) => void): void;
+  initialize(): Promise<void>;
+  send(data: { image: HTMLVideoElement }): Promise<void>;
+  close?(): void;
+}
+
 export class FaceMeshRunner {
   private video: HTMLVideoElement;
-  private faceMesh: any = null;
+  private faceMesh: FaceMeshInstance | null = null;
   private running = false;
   private lastFace: FaceLandmark[] | null = null;
   private rafId: number | null = null;
@@ -33,7 +46,7 @@ export class FaceMeshRunner {
       refineLandmarks: true,
     });
     // Register results callback BEFORE initialize
-    this.faceMesh.onResults((results: any) => {
+    this.faceMesh.onResults((results: FaceMeshResults) => {
       if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         this.lastFace = results.multiFaceLandmarks[0] as FaceLandmark[];
       } else {

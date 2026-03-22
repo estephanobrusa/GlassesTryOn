@@ -1,6 +1,5 @@
-// GlassesTryOn.tsx
 import React, { useEffect, useRef } from 'react';
-import { GlassesViewer, GlassesViewerOptions } from 'glasses-tryon-core';
+import { GlassesViewer } from 'glasses-tryon-core';
 
 interface GlassesTryOnProps {
   model: string;

@@ -125,11 +125,12 @@ export class ThreeSceneManager {
     if (this.model) {
       this.scene.remove(this.model);
       this.model.traverse((obj) => {
-        if ((obj as any).geometry) (obj as any).geometry.dispose?.();
-        if ((obj as any).material) {
-          const mat = (obj as any).material;
-          if (Array.isArray(mat)) mat.forEach((m: any) => m.dispose?.());
-          else mat.dispose?.();
+        const mesh = obj as THREE.Mesh;
+        if (mesh.geometry) mesh.geometry.dispose?.();
+        if (mesh.material) {
+          const mat = mesh.material;
+          if (Array.isArray(mat)) mat.forEach((m: THREE.Material) => m.dispose?.());
+          else (mat as THREE.Material).dispose?.();
         }
       });
       this.model = null;

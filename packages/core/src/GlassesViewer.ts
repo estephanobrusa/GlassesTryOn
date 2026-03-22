@@ -198,7 +198,7 @@ export class GlassesViewer {
     this.listeners[event] = (this.listeners[event] || []).filter((f) => f !== cb);
   }
 
-  private emit(event: string, ...args: any[]) {
+  private emit(event: string, ...args: unknown[]) {
     (this.listeners[event] || []).forEach((f) => f(...args));
   }
 }
