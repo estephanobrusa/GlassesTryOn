@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/estephanobrusa/GlassesTryOn/compare/glasses-tryon-core-v1.1.0...glasses-tryon-core-v1.2.0) (2026-03-22)
+
+
+### Features
+
+* **global:** refactor code structure for improved readability and maintainability ([ece71c2](https://github.com/estephanobrusa/GlassesTryOn/commit/ece71c29445eb526466cb6860018fc96455f1e79))
+
 ## [1.1.0](https://github.com/estephanobrusa/GlassesTryOn/compare/glasses-tryon-core-v1.0.0...glasses-tryon-core-v1.1.0) (2026-03-22)
 
 
