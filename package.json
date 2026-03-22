@@ -58,6 +58,6 @@
     "@tensorflow/tfjs-core": "^4.22.0",
     "@types/three": "^0.183.1",
     "glasses-tryon-react": "link:packages/react",
-    "three": "^0.157.0"
+    "three": "^0.183.2"
   }
 }

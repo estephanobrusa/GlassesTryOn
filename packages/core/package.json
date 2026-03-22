@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@mediapipe/face_mesh": "^0.4.1633559617",
-    "three": "^0.157.0"
+    "three": "^0.183.2"
   },
   "devDependencies": {
     "@types/node": "^25.5.0",
