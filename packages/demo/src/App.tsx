@@ -2,229 +2,11 @@
 
 import React from 'react';
 import { GlassesTryOn } from 'glasses-tryon-react';
+import './global.css';
 
 const GITHUB_URL = 'https://github.com/estephanobrusa/GlassesTryOn';
 const NPM_REACT_URL = 'https://www.npmjs.com/package/glasses-tryon-react';
 const NPM_CORE_URL = 'https://www.npmjs.com/package/glasses-tryon-core';
-
-const styles = {
-  root: {
-    margin: 0,
-    padding: 0,
-    fontFamily:
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    backgroundColor: '#0f0f0f',
-    color: '#e5e5e5',
-    minHeight: '100vh',
-  } as React.CSSProperties,
-
-  // ── Navbar ──────────────────────────────────────────────────────────────
-  navbar: {
-    position: 'sticky' as const,
-    top: 0,
-    zIndex: 100,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '0 24px',
-    height: '56px',
-    backgroundColor: 'rgba(15, 15, 15, 0.85)',
-    backdropFilter: 'blur(12px)',
-    WebkitBackdropFilter: 'blur(12px)',
-    borderBottom: '1px solid rgba(255,255,255,0.06)',
-  } as React.CSSProperties,
-
-  navBrand: {
-    fontSize: '16px',
-    fontWeight: 700,
-    letterSpacing: '-0.01em',
-    color: '#fff',
-    textDecoration: 'none',
-  } as React.CSSProperties,
-
-  navLinks: {
-    display: 'flex',
-    gap: '8px',
-    alignItems: 'center',
-  } as React.CSSProperties,
-
-  navLink: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '6px 14px',
-    borderRadius: '6px',
-    fontSize: '13px',
-    fontWeight: 500,
-    color: '#a3a3a3',
-    textDecoration: 'none',
-    border: '1px solid transparent',
-    transition: 'color 0.15s, border-color 0.15s, background 0.15s',
-  } as React.CSSProperties,
-
-  // ── Hero ────────────────────────────────────────────────────────────────
-  hero: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    textAlign: 'center' as const,
-    padding: '72px 24px 56px',
-    maxWidth: '720px',
-    margin: '0 auto',
-  } as React.CSSProperties,
-
-  badge: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '6px',
-    padding: '4px 12px',
-    borderRadius: '999px',
-    fontSize: '12px',
-    fontWeight: 500,
-    color: '#f59e0b',
-    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-    border: '1px solid rgba(245, 158, 11, 0.25)',
-    marginBottom: '28px',
-    letterSpacing: '0.01em',
-  } as React.CSSProperties,
-
-  heroTitle: {
-    fontSize: 'clamp(32px, 6vw, 56px)',
-    fontWeight: 800,
-    letterSpacing: '-0.03em',
-    lineHeight: 1.1,
-    color: '#fff',
-    margin: '0 0 20px',
-  } as React.CSSProperties,
-
-  heroAccent: {
-    color: '#22d3ee',
-  } as React.CSSProperties,
-
-  heroDescription: {
-    fontSize: 'clamp(15px, 2vw, 18px)',
-    lineHeight: 1.7,
-    color: '#a3a3a3',
-    margin: '0 0 36px',
-    maxWidth: '560px',
-  } as React.CSSProperties,
-
-  ctaRow: {
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    gap: '12px',
-    justifyContent: 'center',
-  } as React.CSSProperties,
-
-  btnPrimary: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '11px 24px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#0f0f0f',
-    backgroundColor: '#22d3ee',
-    border: '1px solid #22d3ee',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'opacity 0.15s',
-  } as React.CSSProperties,
-
-  btnSecondary: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '8px',
-    padding: '11px 24px',
-    borderRadius: '8px',
-    fontSize: '14px',
-    fontWeight: 600,
-    color: '#e5e5e5',
-    backgroundColor: 'transparent',
-    border: '1px solid rgba(255,255,255,0.15)',
-    textDecoration: 'none',
-    cursor: 'pointer',
-    transition: 'border-color 0.15s, background 0.15s',
-  } as React.CSSProperties,
-
-  // ── Demo section ─────────────────────────────────────────────────────────
-  demoSection: {
-    padding: '0 24px 80px',
-    maxWidth: '1280px',
-    margin: '0 auto',
-  } as React.CSSProperties,
-
-  demoLabel: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    marginBottom: '16px',
-    paddingLeft: '4px',
-  } as React.CSSProperties,
-
-  demoDot: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: '#22c55e',
-    boxShadow: '0 0 8px #22c55e',
-    flexShrink: 0,
-  } as React.CSSProperties,
-
-  demoLabelText: {
-    fontSize: '12px',
-    fontWeight: 600,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase' as const,
-    color: '#71717a',
-  } as React.CSSProperties,
-
-  demoWrapper: {
-    position: 'relative' as const,
-    width: '100%',
-    paddingTop: '56.25%', // 16:9 aspect ratio
-    borderRadius: '12px',
-    overflow: 'hidden',
-    border: '1px solid rgba(255,255,255,0.08)',
-    boxShadow: '0 0 0 1px rgba(34,211,238,0.08), 0 24px 80px rgba(0,0,0,0.6)',
-    backgroundColor: '#000',
-  } as React.CSSProperties,
-
-  demoInner: {
-    position: 'absolute' as const,
-    inset: 0,
-  } as React.CSSProperties,
-
-  // ── Footer ───────────────────────────────────────────────────────────────
-  footer: {
-    borderTop: '1px solid rgba(255,255,255,0.06)',
-    padding: '28px 24px',
-    display: 'flex',
-    flexWrap: 'wrap' as const,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: '12px',
-    maxWidth: '1280px',
-    margin: '0 auto',
-  } as React.CSSProperties,
-
-  footerText: {
-    fontSize: '13px',
-    color: '#52525b',
-  } as React.CSSProperties,
-
-  footerLinks: {
-    display: 'flex',
-    gap: '20px',
-  } as React.CSSProperties,
-
-  footerLink: {
-    fontSize: '13px',
-    color: '#52525b',
-    textDecoration: 'none',
-  } as React.CSSProperties,
-};
 
 // ── SVG icons (inline, no external deps) ───────────────────────────────────
 
@@ -246,27 +28,14 @@ function NpmIcon() {
 
 export default function App() {
   return (
-    <div style={styles.root}>
+    <div>
       {/* ── Navbar ── */}
-      <header style={styles.navbar}>
-        <a href="#" style={styles.navBrand}>
+      <header className="navbar">
+        <a href="#" className="navbar__brand">
           GlassesTryON
         </a>
-        <nav style={styles.navLinks}>
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.color = '#e5e5e5';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.12)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.color = '#a3a3a3';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'transparent';
-            }}
-          >
+        <nav className="navbar__links">
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="navbar__link">
             <GitHubIcon />
             GitHub
           </a>
@@ -274,15 +43,7 @@ export default function App() {
             href={NPM_REACT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            style={styles.navLink}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.color = '#e5e5e5';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.12)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.color = '#a3a3a3';
-              (e.currentTarget as HTMLAnchorElement).style.borderColor = 'transparent';
-            }}
+            className="navbar__link"
           >
             <NpmIcon />
             npm
@@ -292,34 +53,23 @@ export default function App() {
 
       {/* ── Hero ── */}
       <main>
-        <section style={styles.hero}>
-          <div style={styles.badge}>
+        <section className="hero">
+          <div className="hero__badge">
             <span>⚠️</span>
             Learning project · Not production-ready
           </div>
 
-          <h1 style={styles.heroTitle}>
-            Real-time AR <span style={styles.heroAccent}>Glasses Try-On</span>
+          <h1 className="hero__title">
+            Real-time AR <span className="hero__accent">Glasses Try-On</span>
           </h1>
 
-          <p style={styles.heroDescription}>
+          <p className="hero__description">
             Open-source virtual try-on using your webcam, MediaPipe FaceMesh, and Three.js. Drop the
             React component into your app — no server required.
           </p>
 
-          <div style={styles.ctaRow}>
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.btnPrimary}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.opacity = '0.85';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.opacity = '1';
-              }}
-            >
+          <div className="cta-row">
+            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
               <GitHubIcon />
               View on GitHub
             </a>
@@ -327,16 +77,7 @@ export default function App() {
               href={NPM_REACT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              style={styles.btnSecondary}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.3)';
-                (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                  'rgba(255,255,255,0.04)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.15)';
-                (e.currentTarget as HTMLAnchorElement).style.backgroundColor = 'transparent';
-              }}
+              className="btn-secondary"
             >
               <NpmIcon />
               Install from npm
@@ -345,14 +86,14 @@ export default function App() {
         </section>
 
         {/* ── AR Demo ── */}
-        <section style={styles.demoSection}>
-          <div style={styles.demoLabel}>
-            <span style={styles.demoDot} />
-            <span style={styles.demoLabelText}>Live Demo — webcam required</span>
+        <section className="demo-section">
+          <div className="demo-label">
+            <span className="demo-dot" />
+            <span className="demo-label-text">Live Demo — webcam required</span>
           </div>
 
-          <div style={styles.demoWrapper}>
-            <div style={styles.demoInner}>
+          <div className="demo-wrapper">
+            <div className="demo-inner">
               <GlassesTryOn
                 model={`${import.meta.env.BASE_URL}models/test.glb`}
                 maxFPS={30}
@@ -366,34 +107,17 @@ export default function App() {
 
       {/* ── Footer ── */}
       <footer>
-        <div style={styles.footer}>
-          <span style={styles.footerText}>MIT License · Built for learning purposes</span>
-          <div style={styles.footerLinks}>
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={styles.footerLink}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#a3a3a3';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#52525b';
-              }}
-            >
+        <div className="footer">
+          <span className="footer__text">MIT License · Built for learning purposes</span>
+          <div className="footer__links">
+            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="footer__link">
               GitHub
             </a>
             <a
               href={NPM_REACT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              style={styles.footerLink}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#a3a3a3';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#52525b';
-              }}
+              className="footer__link"
             >
               npm (react)
             </a>
@@ -401,13 +125,7 @@ export default function App() {
               href={NPM_CORE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              style={styles.footerLink}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#a3a3a3';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.color = '#52525b';
-              }}
+              className="footer__link"
             >
               npm (core)
             </a>
