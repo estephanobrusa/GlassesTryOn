@@ -1,5 +1,13 @@
 # glasses-tryon-core
 
-Core utilities for Glasses TryOn (face mesh, Three.js logic, calibration, etc).
+Framework-agnostic AR engine for virtual glasses try-on.
 
-See main repository and packages/react for demo integration.
+Uses MediaPipe FaceMesh and Three.js to detect facial landmarks, estimate head pose, and overlay 3D glasses models in real time via webcam.
+
+## Install
+
+```bash
+npm install glasses-tryon-core
+```
+
+See the main repository README for full usage and integration examples.
