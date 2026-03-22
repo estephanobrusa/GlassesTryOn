@@ -104,13 +104,3 @@ pnpm run lint        # Check
 pnpm run lint:fix    # Auto-fix
 pnpm run format      # Prettier
 ```
-
-## Roadmap
-
-- Face mesh occluder (hide temple arms behind face)
-- Photo capture
-- Multi-face support
-- Post-processing effects
-- Pose data export
-- Plugin system
-# GlassesTryOn
