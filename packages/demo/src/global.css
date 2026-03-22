@@ -217,11 +217,30 @@ body {
   background-color: #000;
 }
 
-/* On mobile, fill the available viewport height instead of a fixed ratio */
-@media (max-width: 768px) {
+/*
+  On portrait mobile: rotate the demo 90° so it always displays in landscape.
+  The wrapper takes the viewport height as its width, then aspect-ratio 16/9
+  gives the correct height. transform-origin centers the rotation in place.
+*/
+@media (max-width: 768px) and (orientation: portrait) {
+  .demo-section {
+    padding: 0 0 80px;
+    overflow: hidden;
+  }
+
   .demo-wrapper {
-    aspect-ratio: unset;
-    height: calc(100svh - 56px);
+    width: calc(100svh - 56px); /* viewport height minus navbar = rotated width */
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+    transform: rotate(90deg);
+    transform-origin: center center;
+    border-radius: 0;
+  }
+
+  /* push the section down so rotated wrapper doesn't overlap hero */
+  .demo-section {
+    padding-top: calc((calc(100svh - 56px) / 16 * 9 - 100vw) / 2);
+    padding-bottom: calc((calc(100svh - 56px) / 16 * 9 - 100vw) / 2 + 80px);
   }
 }
 
