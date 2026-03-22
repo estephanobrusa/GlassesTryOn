@@ -10,15 +10,41 @@
       "require": "./dist/index.js"
     }
   },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estephanobrusa/GlassesTryOn.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "face mesh",
+    "core",
+    "ar",
+    "threejs"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "three": "^0.157.0",
-    "@mediapipe/face_mesh": "^0.4.1633559617"
+    "@mediapipe/face_mesh": "^0.4.1633559617",
+    "three": "^0.157.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
-    "tsup": "^7.0.0"
+    "@types/node": "^25.5.0",
+    "tsup": "^7.0.0",
+    "typescript": "^5.0.0"
   }
 }

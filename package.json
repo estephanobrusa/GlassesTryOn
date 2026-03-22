@@ -1,28 +1,53 @@
 {
   "name": "glasses-tryon-monorepo",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
   "workspaces": [
     "packages/core",
     "packages/react",
     "packages/demo"
   ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/estephanobrusa/GlassesTryOn.git"
+  },
+  "keywords": [
+    "try-on",
+    "face mesh",
+    "threejs",
+    "tensorflow",
+    "mediapipe",
+    "react",
+    "AR"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.56.1",
     "@typescript-eslint/parser": "^8.56.1",
+    "@vitest/coverage-v8": "^4.1.0",
+    "@vitest/ui": "^4.1.0",
     "eslint": "^10.0.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.1"
+    "jsdom": "^29.0.1",
+    "prettier": "^3.8.1",
+    "vitest": "^4.1.0"
   },
   "scripts": {
     "lint": "eslint 'packages/**/*.{ts,tsx,js,jsx}' --max-warnings=0",
     "lint:fix": "eslint 'packages/**/*.{ts,tsx,js,jsx}' --fix",
     "format": "prettier --write 'packages/**/*.{ts,tsx,js,jsx,json,css,md}'",
+    "format:check": "prettier --check 'packages/**/*.{ts,tsx,js,jsx,json,css,md}'",
     "build:core": "pnpm --filter glasses-tryon-core run build",
     "build:react": "pnpm --filter glasses-tryon-react run build",
     "build:all": "pnpm run build:core && pnpm run build:react",
-    "dev:demo": "pnpm --filter demo run dev"
+    "dev:demo": "pnpm --filter demo run dev",
+    "typecheck": "tsc --build tsconfig.json && tsc --build --clean tsconfig.json"
   },
   "dependencies": {
     "@mediapipe/face_mesh": "^0.4.1633559619",

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "release-type": "node",
+  "packages": {
+    "packages/core": {
+      "release-type": "node",
+      "changelog-path": "CHANGELOG.md",
+      "component": "glasses-tryon-core"
+    },
+    "packages/react": {
+      "release-type": "node",
+      "changelog-path": "CHANGELOG.md",
+      "component": "glasses-tryon-react"
+    }
+  }
+}
