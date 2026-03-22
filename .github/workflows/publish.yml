@@ -1,39 +1,25 @@
-name: Release
+name: Publish to npm
 
 # ─────────────────────────────────────────────────────────────────────────────
-# ENVIRONMENTS
-#
-#  develop ──► CI only (lint, typecheck, test, build) — NO npm publish
-#
-#  main    ──► release-please opens/updates Release PR on every push
-#              When Release PR is merged → tag created → publish workflow runs
+# Manual publish workflow — use when tags already exist but publish failed.
+# Triggered manually from GitHub Actions UI.
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
-  push:
-    branches:
-      - main
-
-permissions:
-  contents: write
-  pull-requests: write
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to publish'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - core
+          - react
 
 jobs:
-  release-please:
-    runs-on: ubuntu-latest
-    outputs:
-      releases_created: ${{ steps.release.outputs.releases_created }}
-      core_release_created: ${{ steps.release.outputs['packages/core--release_created'] }}
-      react_release_created: ${{ steps.release.outputs['packages/react--release_created'] }}
-    steps:
-      - uses: googleapis/release-please-action@v4
-        id: release
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
   publish:
-    needs: release-please
-    if: needs.release-please.outputs.releases_created == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,14 +43,14 @@ jobs:
       - name: Build all packages
         run: pnpm run build:all
 
-      - name: Publish core to npm
-        if: needs.release-please.outputs.core_release_created == 'true'
+      - name: Publish glasses-tryon-core
+        if: inputs.package == 'all' || inputs.package == 'core'
         run: pnpm --filter glasses-tryon-core publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish react to npm
-        if: needs.release-please.outputs.react_release_created == 'true'
+      - name: Publish glasses-tryon-react
+        if: inputs.package == 'all' || inputs.package == 'react'
         run: pnpm --filter glasses-tryon-react publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
