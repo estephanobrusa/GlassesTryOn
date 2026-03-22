@@ -6,6 +6,8 @@
 
 React component for real-time virtual glasses try-on via webcam.
 
+> ⚠️ **Not production-ready.** This project is built for learning purposes and is under active development. APIs may change without notice and it is not recommended for use in production applications.
+
 A thin React 18 wrapper around [`glasses-tryon-core`](https://www.npmjs.com/package/glasses-tryon-core) — drop in the `<GlassesTryOn>` component and get instant AR glasses overlay with no configuration required.
 
 ---

@@ -5,6 +5,8 @@
 [![npm react](https://img.shields.io/npm/v/glasses-tryon-react?label=react)](https://www.npmjs.com/package/glasses-tryon-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+> ⚠️ **Not production-ready.** This project is built for learning purposes and is under active development. APIs may change without notice and it is not recommended for use in production applications.
+
 ## Overview
 
 Real-time virtual glasses try-on using webcam, MediaPipe FaceMesh, and Three.js.

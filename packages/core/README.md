@@ -6,6 +6,8 @@
 
 Framework-agnostic AR engine for real-time virtual glasses try-on via webcam.
 
+> ⚠️ **Not production-ready.** This project is built for learning purposes and is under active development. APIs may change without notice and it is not recommended for use in production applications.
+
 Uses **MediaPipe FaceMesh** to detect 468 facial landmarks, estimates head pose in 3D, and overlays a **Three.js** glasses model on the live video feed — all in the browser, no server required.
 
 ---
