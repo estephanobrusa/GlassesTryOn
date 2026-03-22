@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1](https://github.com/estephanobrusa/GlassesTryOn/compare/glasses-tryon-core-v1.2.0...glasses-tryon-core-v1.2.1) (2026-03-22)
+
+
+### Bug Fixes
+
+* **core:** prevent frozen glasses model on HMR reload ([8756384](https://github.com/estephanobrusa/GlassesTryOn/commit/875638479d3ba5a086814be9dafcdefb0c20b93d))
+* **core:** use object-fit cover on video to prevent stretching on mobile ([538353f](https://github.com/estephanobrusa/GlassesTryOn/commit/538353feb5331b97b8903e7edb1574ba188fb50e))
+
 ## [1.2.0](https://github.com/estephanobrusa/GlassesTryOn/compare/glasses-tryon-core-v1.1.0...glasses-tryon-core-v1.2.0) (2026-03-22)
 
 
