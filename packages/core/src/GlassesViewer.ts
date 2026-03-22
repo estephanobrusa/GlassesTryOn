@@ -26,6 +26,7 @@ export class GlassesViewer {
   private sceneManager?: ThreeSceneManager;
   private listeners: Record<string, ((...args: unknown[]) => void)[]> = {};
   private _lastFaceState = false;
+  private _destroyed = false;
   private _running = false;
   private _rafId: number | null = null;
   private _maxFPS: number;
@@ -100,6 +101,7 @@ export class GlassesViewer {
     }
 
     // 7. Start render loop
+    if (this._destroyed) return;
     this._running = true;
     this._lastFrameTime = 0;
     this.loop(0);
@@ -176,6 +178,7 @@ export class GlassesViewer {
   };
 
   destroy(): void {
+    this._destroyed = true;
     this._running = false;
     if (this._rafId !== null) {
       cancelAnimationFrame(this._rafId);

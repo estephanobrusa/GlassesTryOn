@@ -1,6 +1,6 @@
 // App.tsx
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { GlassesTryOn } from 'glasses-tryon-react';
 import './global.css';
 
@@ -27,6 +27,8 @@ function NpmIcon() {
 }
 
 export default function App() {
+  const handleFaceDetected = useCallback(() => console.log('face detected'), []);
+
   return (
     <div>
       {/* ── Navbar ── */}
@@ -97,7 +99,7 @@ export default function App() {
               <GlassesTryOn
                 model={`${import.meta.env.BASE_URL}models/test.glb`}
                 maxFPS={30}
-                onFaceDetected={() => console.log('face detected')}
+                onFaceDetected={handleFaceDetected}
                 modelConfig={{ scale: 30 }}
               />
             </div>

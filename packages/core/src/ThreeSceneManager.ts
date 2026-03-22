@@ -122,6 +122,9 @@ export class ThreeSceneManager {
 
   destroy() {
     this.renderer.dispose();
+    if (this.renderer.domElement.parentElement) {
+      this.renderer.domElement.parentElement.removeChild(this.renderer.domElement);
+    }
     if (this.model) {
       this.scene.remove(this.model);
       this.model.traverse((obj) => {
