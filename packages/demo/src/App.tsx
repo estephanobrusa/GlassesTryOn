@@ -23,7 +23,7 @@ export default function App() {
         }}
       >
         <GlassesTryOn
-          model="/models/test.glb"
+          model={`${import.meta.env.BASE_URL}models/test.glb`}
           maxFPS={30}
           onFaceDetected={() => console.log('face detected')}
           modelConfig={{ scale: 30 }}

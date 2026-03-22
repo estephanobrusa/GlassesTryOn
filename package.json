@@ -52,6 +52,7 @@
     "build:core": "pnpm --filter glasses-tryon-core run build",
     "build:react": "pnpm --filter glasses-tryon-react run build",
     "build:all": "pnpm run build:core && pnpm run build:react",
+    "build:demo": "pnpm run build:core && pnpm run build:react && pnpm --filter glasses-tryon-demo run build",
     "dev:demo": "pnpm --filter demo run dev",
     "typecheck": "tsc --build tsconfig.json && tsc --build --clean tsconfig.json",
     "commit": "cz"
