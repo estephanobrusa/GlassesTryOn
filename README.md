@@ -1,5 +1,10 @@
 # GlassesTryON — Open Source 3D Glasses Virtual Try-On
 
+[![CI](https://github.com/estephanobrusa/GlassesTryOn/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/estephanobrusa/GlassesTryOn/actions/workflows/ci.yml)
+[![npm core](https://img.shields.io/npm/v/glasses-tryon-core?label=core)](https://www.npmjs.com/package/glasses-tryon-core)
+[![npm react](https://img.shields.io/npm/v/glasses-tryon-react?label=react)](https://www.npmjs.com/package/glasses-tryon-react)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 ## Overview
 
 Real-time virtual glasses try-on using webcam, MediaPipe FaceMesh, and Three.js.

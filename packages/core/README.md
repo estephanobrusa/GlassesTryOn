@@ -16,7 +16,6 @@ Uses **MediaPipe FaceMesh** to detect 468 facial landmarks, estimates head pose 
 - 🧠 468-landmark face mesh via MediaPipe
 - 📐 Head pose estimation (position, rotation, scale)
 - 🕶️ 3D glasses overlay with Three.js orthographic renderer
-- ⚡ Configurable FPS cap for performance control
 - 🔌 Framework-agnostic — works with React, Vue, Svelte, or plain JS/TS
 - 📦 Dual ESM/CJS output with TypeScript declarations
 
